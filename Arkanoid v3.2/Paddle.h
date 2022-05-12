@@ -20,7 +20,7 @@ private:
     float paddleWidth{ 70.0f };
     float paddleHeight{ 10.0f };
     sf::Vector2f paddleSize{ this->paddleWidth, this->paddleHeight };
-    const float paddleVelocity{ 6.0f };
+    const float paddleVelocity{ 8.0f };
     sf::Vector2f velocity{ paddleVelocity, 0.0f };
     void draw(sf::RenderTarget& target, sf::RenderStates state) const override;
 };

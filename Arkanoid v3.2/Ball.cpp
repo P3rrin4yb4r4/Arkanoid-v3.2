@@ -1,4 +1,5 @@
 #include "Ball.h"
+#include "Paddle.h"
 
 Ball::Ball(float t_X, float t_Y)
 {

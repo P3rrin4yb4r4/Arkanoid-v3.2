@@ -116,6 +116,8 @@ int main()
                         
                         window.setFramerateLimit(60);
 
+                        bool startGame = false;
+                        
                         srand(time(NULL));
                         int randomBackground = rand() % 3;
 
@@ -129,9 +131,9 @@ int main()
 
                         sf::Sprite background;
                         background.setTexture(texture);
-
-                        Ball ball(512, 384);
+                        
                         Paddle paddle(512, 700);
+                        Ball ball(paddle.getPosition().x, paddle.top()-11.0f);
 
                         unsigned int blocksX{ 13 }, blocksY{ 7 }, blockWidth{ 60 }, blockWeight{ 20 };
                         std::vector<Brick> blocks;
@@ -145,6 +147,8 @@ int main()
                         }
                         while (window.isOpen())
                         {
+                            options.close();
+                            about.close();
                             // Process events
                             sf::Event event;
 
@@ -154,14 +158,23 @@ int main()
                                 if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
                                     window.close();
                                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
-                                    ball.ballStart();
+                                    startGame=true;
+                                if (!startGame)
+                                {
+                                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
+                                        ball.moveLeft();
+                                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
+                                        ball.moveRight();
+                                }
                             }
-                            options.close();
-                            about.close();
+
+                            
                             // Clear screen
                             window.clear();
                             menu.draw(window);
 
+                            
+                            if (startGame) { ball.ballStart(); }
                             //Update
                             ball.update();
                             paddle.update();
