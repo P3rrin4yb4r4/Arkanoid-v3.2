@@ -20,6 +20,7 @@ sf::Sound sound1;
 sf::SoundBuffer bufferHit;
 sf::SoundBuffer bufferPaddle;
 
+// Sprawdzenie czy dwa obiekty się przenikają
 template <class T1, class T2>
 bool isIntersecting(T1& obj_1, T2& obj_2)
 {
@@ -27,6 +28,7 @@ bool isIntersecting(T1& obj_1, T2& obj_2)
         && obj_1.bottom() >= obj_2.top() && obj_1.top() <= obj_2.bottom();
 }
 
+//Sprawdzenie kolizji obiektów paletka-piłka
 bool collisionTest(Paddle& paddle, Ball& ball)
 {
     if (!isIntersecting(paddle, ball)) return false;
@@ -44,6 +46,8 @@ bool collisionTest(Paddle& paddle, Ball& ball)
         ball.moveRight();
     }
 }
+
+//Sprawdzenie kolizji obiektów piłka-bloczek
 bool collisionTest(Brick& block, Ball& ball)
 {
     if (!isIntersecting(block, ball)) return false;
@@ -75,15 +79,14 @@ bool collisionTest(Brick& block, Ball& ball)
 }
 int main()
 {
-    // Create the main window
+    // Stworzenie okna menu
     sf::RenderWindow menuWindow(sf::VideoMode(SCREEN_X, SCREEN_Y), "Arkanoid ver. 2.0 - menu");
 
     Menu menu(menuWindow.getSize().x, menuWindow.getSize().y);
 
     while (menuWindow.isOpen())
     {
-        
-
+        // Event okna menu
         sf::Event eventMenu;
         while (menuWindow.pollEvent(eventMenu))
         {
@@ -109,6 +112,8 @@ int main()
                     sf::RenderWindow about(sf::VideoMode(SCREEN_X, SCREEN_Y), "About");
 
                     int x = menu.MainMenuPressed();
+
+                    // Wybranie opcji gry
                     if (x == 0)
                     {
                         menuWindow.close();
@@ -116,15 +121,14 @@ int main()
                         
                         window.setFramerateLimit(60);
 
-                        bool startGame = false;
-                        
-                        srand(time(NULL));
-                        int randomBackground = rand() % 3;
-
+                        // Stworzenie tła gry
                         sf::Image image[3];
                         image[0].loadFromFile("tlo1.jpg");
                         image[1].loadFromFile("tlo2.jpg");
                         image[2].loadFromFile("tlo3.jpg");
+
+                        srand(time(NULL));
+                        int randomBackground = rand() % 3;
 
                         sf::Texture texture;
                         texture.loadFromImage(image[randomBackground]);
@@ -132,8 +136,9 @@ int main()
                         sf::Sprite background;
                         background.setTexture(texture);
                         
+                        // Stworzenie obiektów paletki, piłki i bloczków
                         Paddle paddle(512, 700);
-                        Ball ball(paddle.getPosition().x, paddle.top()-11.0f);
+                        Ball ball(512, 700-16);
 
                         unsigned int blocksX{ 13 }, blocksY{ 7 }, blockWidth{ 60 }, blockWeight{ 20 };
                         std::vector<Brick> blocks;
@@ -145,21 +150,26 @@ int main()
                                 blocks.emplace_back((j + 1) * (blockWidth + 10), (i + 2) * (blockWeight + 5), blockWidth, blockWeight);
                             }
                         }
+
+                        bool start = false;
+                        // Pętla gry
                         while (window.isOpen())
                         {
                             options.close();
                             about.close();
-                            // Process events
-                            sf::Event event;
 
+                            // Event okna gry
+                            sf::Event event;
                             while (window.pollEvent(event))
                             {
-                                // Close window : exit
                                 if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
                                     window.close();
-                                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
-                                    startGame=true;
-                                if (!startGame)
+                                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && !start)
+                                {
+                                    ball.ballStart();
+                                    start = true;
+                                }
+                                if (!ball.statusOfBall())
                                 {
                                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
                                         ball.moveLeft();
@@ -167,14 +177,15 @@ int main()
                                         ball.moveRight();
                                 }
                             }
-
                             
-                            // Clear screen
+                            // Rysowanie okna - obiektów
                             window.clear();
                             menu.draw(window);
+                            window.draw(background);
+                            window.draw(ball);
+                            window.draw(paddle);
+                            for (auto& block : blocks) { window.draw(block); }
 
-                            
-                            if (startGame) { ball.ballStart(); }
                             //Update
                             ball.update();
                             paddle.update();
@@ -191,15 +202,8 @@ int main()
                             auto iterator = remove_if(begin(blocks), end(blocks), [](Brick& block) {return block.isDestroyed(); });
                             blocks.erase(iterator, end(blocks));
 
-                            // Draw
-                            window.draw(background);
-                            window.draw(ball);
-                            window.draw(paddle);
-                            for (auto& block : blocks)
-                                window.draw(block);
-
+                            // Wyświetlenie
                             window.display();
-
                         }
                     }
                 }

@@ -16,12 +16,28 @@ void Ball::draw(sf::RenderTarget& target, sf::RenderStates state) const
 
 void Ball::update()
 {
-    shape.move(this->velocity);
+    if (ballStatus == false)
+    {
+        ballVelocity = 8.0f;
+        shape.move(this->velocity);
 
-    if (this->left() < 0) { velocity.x = ballVelocity; }
-    else if (this->right() > SCREEN_X) { velocity.x = -ballVelocity; }
-    else if (this->top() < 0) { velocity.y = ballVelocity; }
-    else if (this->bottom() > SCREEN_Y) { velocity.y = -ballVelocity; }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) { velocity.x = ballVelocity; }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) { velocity.x = -ballVelocity; }
+        else { velocity.x = 0; }
+        
+        if (this->left() <= 35.0f) { velocity.x = ballVelocity; }
+        else if (this->right() >= SCREEN_X-35.0f) { velocity.x = -ballVelocity; }
+    }
+    if (ballStatus == true)
+    {
+        ballVelocity = 6.0f;
+        shape.move(this->velocity);
+
+        if (this->left() < 0) { velocity.x = ballVelocity; }
+        else if (this->right() > SCREEN_X) { velocity.x = -ballVelocity; }
+        else if (this->top() < 0) { velocity.y = ballVelocity; }
+        else if (this->bottom() > SCREEN_Y) { velocity.y = -ballVelocity; }
+    }
 }
 
 float Ball::left()
@@ -77,5 +93,11 @@ void Ball::speedUp()
 void Ball::ballStart()
 {
     this->velocity.x = ballVelocity;
-    this->velocity.y = ballVelocity;
+    this->velocity.y = -ballVelocity;
+    this->ballStatus = true;
+}
+
+bool Ball::statusOfBall()
+{
+    return ballStatus;
 }

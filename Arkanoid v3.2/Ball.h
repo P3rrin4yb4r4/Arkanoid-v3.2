@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #define SCREEN_Y 768
 #define SCREEN_X 1024
+#include <iostream>
 
 class Ball : public sf::Drawable
 {
@@ -22,7 +23,9 @@ public:
     sf::Vector2f getPosition();
     void speedUp();
     void ballStart();
+    bool statusOfBall();
 private:
+    bool ballStatus = false;
     const float ballRadius = 10.0f;
     sf::CircleShape shape;
     float ballVelocity = 6.0f;
