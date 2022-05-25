@@ -1,11 +1,12 @@
 #include "Brick.h"
 
-Brick::Brick(float t_X, float t_Y, float t_Width, float t_Height)
+Brick::Brick(float t_X, float t_Y, float t_Width, float t_Height, int red, int green, int blue)
 {
+    srand(time(NULL));
     shape.setSize(sf::Vector2f(t_Width, t_Height));
     shape.setPosition(t_X, t_Y);
     shape.setOrigin(t_Width / 2.f, t_Height / 2.f);
-    shape.setFillColor(sf::Color::Yellow);
+    shape.setFillColor(sf::Color(red, green, blue));
 }
 
 void Brick::draw(sf::RenderTarget& target, sf::RenderStates state) const

@@ -36,7 +36,13 @@ void Ball::update()
         if (this->left() < 0) { velocity.x = ballVelocity; }
         else if (this->right() > SCREEN_X) { velocity.x = -ballVelocity; }
         else if (this->top() < 0) { velocity.y = ballVelocity; }
-        else if (this->bottom() > SCREEN_Y) { velocity.y = -ballVelocity; }
+        else if (this->bottom() > SCREEN_Y) 
+        { 
+            velocity.y = -ballVelocity;
+            shape.setPosition(this->startPosition_x, this->startPosition_y); 
+            ballStatus = false;
+            velocity.y = 0.0f;
+        }
     }
 }
 

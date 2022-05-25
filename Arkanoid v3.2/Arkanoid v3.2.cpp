@@ -8,8 +8,8 @@
 #include "Menu.h"
 #include <vector>
 
-#define SCREEN_Y 768
 #define SCREEN_X 1024
+#define SCREEN_Y 768
 
 #include <iostream>
 #include <stdlib.h>
@@ -91,7 +91,7 @@ int main()
         while (menuWindow.pollEvent(eventMenu))
         {
             if(menuWindow.isOpen()) {}
-            if (eventMenu.type == sf::Event::Closed)
+            if (eventMenu.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
             {
                 menuWindow.close();
             }
@@ -138,7 +138,18 @@ int main()
                         
                         // Stworzenie obiektów paletki, piłki i bloczków
                         Paddle paddle(512, 700);
-                        Ball ball(512, 700-16);
+                        Ball ball(512, 684);
+
+                        int tab[3][13][7];
+                        for (int i = 0; i < 13; i++)
+                        {
+                            for (int j = 0; j < 7; j++)
+                            {
+                                tab[0][i][j] = rand() % 255;
+                                tab[1][i][j] = rand() % 255;
+                                tab[2][i][j] = rand() % 255;
+                            }
+                        }
 
                         unsigned int blocksX{ 13 }, blocksY{ 7 }, blockWidth{ 60 }, blockWeight{ 20 };
                         std::vector<Brick> blocks;
@@ -147,11 +158,10 @@ int main()
                         {
                             for (int j = 0; j < blocksX; j++)
                             {
-                                blocks.emplace_back((j + 1) * (blockWidth + 10), (i + 2) * (blockWeight + 5), blockWidth, blockWeight);
+                                blocks.emplace_back((j + 1) * (blockWidth + 10), (i + 2) * (blockWeight + 5), blockWidth, blockWeight, tab[0][i][j], tab[1][i][j], tab[2][i][j]);
                             }
                         }
 
-                        bool start = false;
                         // Pętla gry
                         while (window.isOpen())
                         {
@@ -164,17 +174,17 @@ int main()
                             {
                                 if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
                                     window.close();
-                                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && !start)
-                                {
-                                    ball.ballStart();
-                                    start = true;
-                                }
+                                
                                 if (!ball.statusOfBall())
                                 {
                                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
                                         ball.moveLeft();
                                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
                                         ball.moveRight();
+                                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
+                                    {
+                                        ball.ballStart();
+                                    }
                                 }
                             }
                             
@@ -184,7 +194,10 @@ int main()
                             window.draw(background);
                             window.draw(ball);
                             window.draw(paddle);
-                            for (auto& block : blocks) { window.draw(block); }
+                            for (auto& block : blocks) 
+                            { 
+                                window.draw(block); 
+                            }
 
                             //Update
                             ball.update();

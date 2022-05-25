@@ -1,11 +1,13 @@
 #ifndef BRICK_H
 #define BRICK_H
 #include <SFML/Graphics.hpp>
+#include <stdlib.h>
+#include <ctime>
 
 class Brick : public sf::Drawable
 {
 public:
-    Brick(float t_X, float t_Y, float t_Width, float t_Height);
+    Brick(float t_X, float t_Y, float t_Width, float t_Height, int red, int green, int blue);
     Brick() = delete;
     ~Brick() = default;
 

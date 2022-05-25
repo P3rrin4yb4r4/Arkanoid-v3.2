@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #define SCREEN_Y 768
 #define SCREEN_X 1024
+
 #include <iostream>
 
 class Ball : public sf::Drawable
@@ -25,6 +26,8 @@ public:
     void ballStart();
     bool statusOfBall();
 private:
+    float startPosition_x = 512.0f;
+    float startPosition_y = 684.0f;
     bool ballStatus = false;
     const float ballRadius = 10.0f;
     sf::CircleShape shape;

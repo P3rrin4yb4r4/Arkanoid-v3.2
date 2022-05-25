@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #define SCREEN_Y 768
 #define SCREEN_X 1024
+
 class Paddle : public sf::Drawable
 {
 public:
