@@ -3,8 +3,9 @@
 #include <SFML/Graphics.hpp>
 #include <stdlib.h>
 #include <ctime>
+#include "Objects.h"
 
-class Brick : public sf::Drawable
+class Brick : public sf::Drawable, public Objects
 {
 public:
     Brick(float t_X, float t_Y, float t_Width, float t_Height, int red, int green, int blue);

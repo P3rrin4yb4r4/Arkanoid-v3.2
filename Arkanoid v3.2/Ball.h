@@ -25,6 +25,8 @@ public:
     void speedUp();
     void ballStart();
     bool statusOfBall();
+    void beforeStart();
+    void setPosition(sf::Vector2f p);
 private:
     float startPosition_x = 512.0f;
     float startPosition_y = 684.0f;

@@ -77,6 +77,19 @@ bool collisionTest(Brick& block, Ball& ball)
         ballFromTop ? ball.moveUp() : ball.moveDown();
     }
 }
+
+bool lifeLoose(Ball &ball, Paddle &paddle)
+{
+    if (ball.bottom() < SCREEN_Y)
+    {
+        return false;
+    }
+    ball.beforeStart();
+    sf::Vector2f position = paddle.getPosition();
+    position.y -= 16;
+    ball.setPosition(position);
+}
+
 int main()
 {
     // Stworzenie okna menu
@@ -203,6 +216,7 @@ int main()
                             ball.update();
                             paddle.update();
 
+                            lifeLoose(ball, paddle);
                             //Collision check
                             collisionTest(paddle, ball);
                             for (auto& block : blocks) if (collisionTest(block, ball))
